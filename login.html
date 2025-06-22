@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stress Analyzer - Underwater Glow</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+
+    /* Reset & base */
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: #010a20;
+      color: #ccf0ff;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+    }
+
+    /* Waves background */
+    .waves {
+      position: fixed;
+      bottom: 0; left: 0;
+      width: 100vw; height: 100vh;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .wave {
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      bottom: -50%;
+      left: -50%;
+      background: radial-gradient(circle at 50% 50%, rgba(0, 255, 255, 0.3), transparent 70%);
+      opacity: 0.4;
+      border-radius: 45%;
+      animation: waveAnim 12s infinite ease-in-out;
+    }
+
+    .wave:nth-child(2) {
+      animation-delay: 4s;
+      background: radial-gradient(circle at 60% 40%, rgba(0, 200, 255, 0.3), transparent 70%);
+    }
+
+    .wave:nth-child(3) {
+      animation-delay: 8s;
+      background: radial-gradient(circle at 40% 60%, rgba(0, 100, 255, 0.25), transparent 70%);
+    }
+
+    @keyframes waveAnim {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+      50% {
+        transform: translate(-20%, -10%) scale(1.05);
+      }
+      100% {
+        transform: translate(0, 0) scale(1);
+      }
+    }
+
+    /* Form container */
+    .container {
+      position: relative;
+      z-index: 1;
+      background: rgba(255,255,255,0.1);
+      border-radius: 30px;
+      padding: 45px 40px 55px;
+      width: 400px;
+      max-width: 90vw;
+      box-shadow:
+        0 20px 40px rgba(0,0,0,0.4),
+        inset 0 0 60px rgba(255,255,255,0.15);
+      backdrop-filter: blur(15px);
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
+      animation: floatSlow 8s ease-in-out infinite;
+      color: #e0f7ff;
+    }
+
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-14px); }
+    }
+
+    h2 {
+      font-weight: 800;
+      font-size: 3rem;
+      background: linear-gradient(90deg, #00d2ff, #3a47d5);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-align: center;
+      margin-bottom: 36px;
+      letter-spacing: 0.05em;
+      text-shadow:
+        0 0 15px #00bfff,
+        0 0 30px #3a47d5;
+      user-select: text;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #cce7ff;
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 16px 20px;
+      font-size: 1.05rem;
+      border-radius: 14px;
+      border: 2.5px solid transparent;
+      outline: none;
+      background: rgba(255,255,255,0.1);
+      color: #e0eaff;
+      box-shadow: inset 0 0 15px rgba(0, 150, 255, 0.25);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+      margin-bottom: 28px;
+      letter-spacing: 0.03em;
+    }
+
+    input::placeholder {
+      color: rgba(224, 234, 255, 0.6);
+      font-style: italic;
+    }
+
+    input:focus {
+      border-color: #00cfff;
+      background: rgba(255,255,255,0.18);
+      box-shadow:
+        0 0 12px #00cfff,
+        inset 0 0 25px #00cfff;
+      color: #ffffff;
+    }
+
+    button {
+      width: 100%;
+      padding: 18px 0;
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: #fff;
+      background: linear-gradient(90deg, #3a47d5, #00d2ff);
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow:
+        0 6px 20px rgba(0, 210, 255, 0.7),
+        0 0 40px #00cfff;
+      transition: box-shadow 0.3s ease, transform 0.25s ease;
+      letter-spacing: 0.05em;
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+      transform: rotate(25deg);
+      animation: shimmer 3.5s linear infinite;
+      opacity: 0.7;
+      border-radius: 30px;
+      pointer-events: none;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) rotate(25deg); }
+      100% { transform: translateX(100%) rotate(25deg); }
+    }
+
+    button:hover {
+      box-shadow:
+        0 8px 30px rgba(0, 210, 255, 1),
+        0 0 60px #00e5ff,
+        0 0 90px #00e5ff;
+      transform: translateY(-5px);
+    }
+
+    button:active {
+      transform: translateY(-2px);
+      box-shadow:
+        0 6px 18px rgba(0, 180, 255, 0.8),
+        0 0 45px #00bfff;
+    }
+
+    .footer-text {
+      margin-top: 28px;
+      text-align: center;
+      color: #aaccee;
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 0.04em;
+      user-select: none;
+      z-index: 1;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .container {
+        width: 90vw;
+        padding: 35px 25px 50px;
+      }
+      h2 {
+        font-size: 2.2rem;
+      }
+      input[type="text"],
+      input[type="number"] {
+        font-size: 1rem;
+        padding: 14px 18px;
+      }
+      button {
+        font-size: 1.1rem;
+        padding: 16px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="waves">
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+  </div>
+
+  <main class="container" role="main" aria-label="Stress Analyzer Login Form">
+    <h2>Welcome 🙏</h2>
+    <form onsubmit="handleSubmit(event)" autocomplete="off" novalidate>
+      <label for="name">Enter Your Name</label>
+      <input type="text" id="name" name="name" placeholder="Your full name" required />
+      <label for="age">Age</label>
+      <input type="number" id="age" name="age" placeholder="Your age" min="3" max="100" required />
+      <button type="submit">Continue</button>
+    </form>
+    <p class="footer-text">Welcome to our stress free society!</p>
+  </main>
+
+<script>
+  // Form submission handler
+  function handleSubmit(e) {
+    e.preventDefault();
+    const name = e.target.name.value.trim();
+    const age = e.target.age.value.trim();
+    if (!name || !age) {
+      alert('Please fill in all fields.');
+      return;
+    }
+    alert(`Hello ${name}, age ${age}! You have successfully logged in.`);
+    window.location.href = 'na.html';
+  }
+</script>
+
+</body>
+</html>
